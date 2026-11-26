@@ -3,11 +3,13 @@ Enunciado de proyecto: Viaje en Común
 Viaje en Común es una aplicación móvil para organizar viajes en grupo. Los viajeros podrán preparar un itinerario compartido, registrar gastos, consultar cuánto debe aportar cada persona y guardar documentos del viaje. La aplicación se desarrollará con Flutter y utilizará Supabase para la autenticación, la base de datos PostgreSQL, el almacenamiento privado de archivos y la sincronización del itinerario.
 
 El proyecto está planteado como un trabajo de nivel intermedio–avanzado. Puedes realizarlo individualmente o en un equipo de dos personas. El resultado debe poder demostrarse con varias cuentas y dispositivos, desde la creación de un viaje hasta la consulta del balance final.
+
 1. Situación de partida
 
 Lucía está organizando una escapada a Lisboa con Ana y Marcos. Las reservas están repartidas entre varios correos, los horarios se acuerdan en un chat y cada persona apunta sus gastos donde puede. Antes de salir, el grupo necesita consultar la versión actual del plan. Durante el viaje, necesita saber quién pagó cada compra y a quién le corresponde.
 
 Lucía creará un viaje en la aplicación e invitará a sus amigos. Ana se encargará de completar el itinerario y Marcos registrará los gastos que pague. Si cambian la hora de una actividad mientras los tres tienen abierta la aplicación, la agenda se actualizará en sus dispositivos. Al terminar, podrán consultar las cuentas y conservar el viaje archivado.
+
 2. Objetivos del proyecto
 
 - Construir una aplicación móvil con varios flujos completos y estados de carga, error y recuperación.
@@ -31,12 +33,14 @@ Archivar o reactivar el viaje                       Sí                  No     
 La creación de un viaje asignará el rol de propietario a su creador. Los roles disponibles al invitar a otra persona serán editor y lector. Cualquier miembro, incluido un lector, podrá figurar en el reparto de un gasto. Así, una persona puede consultar lo que debe sin tener permiso para modificar las cuentas.
 
 Flutter mostrará las acciones disponibles para cada usuario. Supabase aplicará las mismas reglas cuando reciba una petición directa, incluso si alguien modifica la aplicación o utiliza otro cliente.
+
 4. Requisitos funcionales
 4.1. Registro, inicio de sesión y perfil
 
 La aplicación permitirá crear una cuenta con correo y contraseña, iniciar y cerrar sesión, y recuperar el acceso mediante correo. El perfil incluirá un nombre visible para los compañeros de viaje.
 
-Al abrir la aplicación con una sesión válida, el usuario llegará a Mis viajes. Si la sesión ha caducado durante una operación, la aplicación mostrará el motivo y ofrecerá volver a identificarse. El cierre de sesión debe limpiar del estado de la aplicación los datos de la cuenta anterior.
+Al abrir la aplicación con una sesión válida, el usuario llegará a Mis viajes. Si la sesión ha caducado durante una operación, la aplicación mostrará el motivo y ofrecerá volver a identificarse. El cierre de sesión debe limpiar del estado de la aplicación y los datos de la cuenta anterior.
+
 4.2. Creación y gestión de viajes
 
 El formulario de creación incluirá título, destino, fecha de inicio, fecha de fin y una descripción opcional. Todos los importes del proyecto se expresarán en euros. Las fechas y horas del itinerario se introducirán según la hora local del destino.
@@ -44,6 +48,7 @@ El formulario de creación incluirá título, destino, fecha de inicio, fecha de
 En Mis viajes, el usuario verá los viajes en los que participa, ordenados por fecha de inicio, y podrá consultar los archivados en una sección propia. La tarjeta de cada viaje mostrará su nombre, destino, fechas y el rol del usuario. La ficha del viaje dará acceso a la agenda, los gastos, los documentos y los miembros.
 
 El propietario podrá archivar el viaje. Mientras esté archivado, sus miembros conservarán el acceso de lectura y el propietario podrá reactivarlo. Las operaciones de escritura, incluida la aceptación de invitaciones, deberán respetar ese estado. Si el propietario cambia las fechas, el sistema rechazará el cambio cuando deje actividades existentes fuera del nuevo intervalo.
+
 4.3. Invitaciones y miembros
 
 El propietario indicará el correo del invitado y su rol. La aplicación generará una invitación de un solo uso y mostrará un código o enlace que el propietario pueda compartir. Para completar la incorporación, el destinatario deberá iniciar sesión con la cuenta correspondiente al correo invitado.
@@ -51,6 +56,7 @@ El propietario indicará el correo del invitado y su rol. La aplicación generar
 Las invitaciones tendrán una validez de siete días. El propietario podrá consultar su estado y revocar las pendientes. La aplicación distinguirá entre una invitación caducada, una revocada y una que pertenece a otra cuenta. Al aceptar una invitación, Supabase deberá registrar la incorporación y el uso de la invitación en una misma operación. Repetir la petición con la cuenta que ya la aceptó devolverá el estado de incorporación existente sin duplicar al miembro.
 
 Una vez incorporado el usuario, el propietario podrá cambiar su rol entre editor y lector. El permiso actualizado deberá aplicarse al siguiente intento de escritura, aunque el otro usuario todavía tenga abierta una pantalla con los permisos anteriores.
+
 4.4. Itinerario compartido
 
 La agenda se mostrará agrupada por días y ordenada por hora. Una actividad tendrá título, fecha, hora de inicio, categoría y, opcionalmente, hora de fin, dirección y notas. Las categorías iniciales serán transporte, alojamiento, comida, visita y tiempo libre.
@@ -102,7 +108,9 @@ trip_documents    Metadatos de los archivos privados              id, trip_id, c
 Como mínimo, el diseño deberá impedir que una cuenta aparezca dos veces como miembro del mismo viaje o dos veces en el reparto de un gasto. También deberá comprobar que el pagador y los participantes del reparto pertenecen al viaje del gasto.
 
 Crear un viaje con su propietario, aceptar una invitación y guardar un gasto con sus repartos son operaciones que deberán ser atómicas en PostgreSQL. Puedes implementarlas mediante funciones de base de datos llamadas desde Flutter. Cada función deberá validar los permisos y datos de la cuenta que la ejecuta.
+
 6. Requisitos técnicos y de interfaz
+
 Flutter
 
 - Organizar el código de modo que la lógica de reparto y saldo pueda probarse sin iniciar la interfaz. La elección de la solución de estado y navegación queda abierta.
@@ -132,6 +140,7 @@ Se intenta guardar un gasto de 20,00 € con un reparto de 19,99 €            
 Se introducen los gastos del ejemplo de Lisboa                                      El total es 150,00 € y los saldos de Ana, Marcos y Lucía son +80,00 €, −25,00 € y −55,00 €, respectivamente.
 Una cuenta ajena al viaje intenta descargar un billete                              El acceso se rechaza aunque conozca la ruta del archivo.
 Lucía archiva el viaje mientras Ana tiene abierto un formulario de actividad        Ana recibe un mensaje al intentar guardar y el itinerario permanece intacto.
+
 8. Entrega y demostración
 
 La entrega incluirá el repositorio Flutter, las migraciones SQL, un README de instalación, los datos de demostración y las pruebas. El README explicará cómo configurar Supabase, ejecutar las migraciones, preparar las cuentas de prueba y arrancar la aplicación. Incorporará un esquema breve del modelo de datos y las decisiones relevantes sobre permisos y sincronización.
@@ -139,6 +148,7 @@ La entrega incluirá el repositorio Flutter, las migraciones SQL, un README de i
 Las pruebas deberán cubrir el cálculo de saldos, el reparto con redondeo y el rechazo de importes incorrectos. Además, la validación debe incluir al menos un caso de escritura sin permisos y uno de acceso a un archivo privado por parte de una cuenta ajena al viaje. Estas comprobaciones pueden formar parte de una suite de integración o acompañarse de pasos reproducibles y resultados esperados.
 
 En la demostración se utilizarán dos sesiones abiertas a la vez. El recorrido empezará con la creación de un viaje y la aceptación de una invitación. Después se modificará una actividad para observar su actualización en la segunda sesión, se registrará un gasto y se comprobará el balance. El cierre de la demo mostrará el acceso legítimo a un documento y el rechazo de un acceso desde otra cuenta.
+
 Rúbrica de evaluación
 Criterio                                                               Peso
 Flujos completos de viajes, invitaciones, agenda, gastos y documentos  30 %
@@ -146,6 +156,7 @@ Autorización por roles y privacidad de datos y archivos                25 %
 Integridad del modelo, transacciones y exactitud del reparto           20 %
 Usabilidad de la aplicación y gestión de errores                       15 %
 Pruebas, documentación y reproducibilidad de la entrega                10 %
+
 9. Ampliaciones opcionales
 
 Una vez completados los criterios de aceptación, puedes elegir una ampliación:
