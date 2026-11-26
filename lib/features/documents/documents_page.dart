@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../supabase_config.dart';
+
 class DocumentsPage extends StatefulWidget {
   const DocumentsPage({super.key, required this.trip});
 
@@ -173,17 +175,15 @@ class _DocumentsPageState extends State<DocumentsPage> {
     String mimeType,
   ) async {
     final session = _client.auth.currentSession;
-    const projectUrl = String.fromEnvironment('SUPABASE_URL');
-    const publishableKey = String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
-    if (session == null || projectUrl.isEmpty || publishableKey.isEmpty) {
+    if (session == null) {
       throw StateError(
-        'Falta una sesión o la configuración pública de Supabase.',
+        'Falta una sesión de Supabase.',
       );
     }
 
     final encodedPath = path.split('/').map(Uri.encodeComponent).join('/');
     final url = Uri.parse(
-      '${projectUrl.replaceFirst(RegExp(r'/$'), '')}'
+      '${supabaseUrl.replaceFirst(RegExp(r'/$'), '')}'
       '/storage/v1/object/trip-documents/$encodedPath',
     );
     final dio = Dio();
@@ -194,7 +194,7 @@ class _DocumentsPageState extends State<DocumentsPage> {
         options: Options(
           contentType: mimeType,
           headers: {
-            'apikey': publishableKey,
+            'apikey': supabasePublishableKey,
             'Authorization': 'Bearer ${session.accessToken}',
             'x-upsert': 'false',
           },

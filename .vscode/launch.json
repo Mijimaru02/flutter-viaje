@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Viaje en Común",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=SUPABASE_URL=https://sznwctyvrzgvwxprmxpu.supabase.co",
+        "--dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_HCcSKvMQ16iAq2yHc58H-g_DyaR6ZCB"
+      ]
+    }
+  ]
+}

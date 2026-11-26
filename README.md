@@ -37,7 +37,9 @@ flutter pub get
 flutter run --dart-define=SUPABASE_URL=https://<project-ref>.supabase.co --dart-define=SUPABASE_PUBLISHABLE_KEY=<publishable-key>
 ```
 
-En Windows, Flutter puede requerir activar **Developer Mode** para crear enlaces simbólicos al compilar plugins. No compartas la clave de proyecto en capturas o repositorios públicos.
+En VS Code, abre la carpeta `DI_UD1/viajeencomun` y pulsa **F5**; la configuración `Viaje en Común` de `.vscode/launch.json` ya pasa estos valores.
+
+La clave publishable está diseñada para usarse en la app cliente; no pongas claves `service_role`, secretas ni contraseñas en Flutter o en el repositorio. En Windows, Flutter puede requerir activar **Developer Mode** para crear enlaces simbólicos al compilar plugins.
 
 ## Pruebas
 

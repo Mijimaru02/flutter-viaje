@@ -10,10 +10,6 @@ class ViajeEnComunApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final configured =
-        const String.fromEnvironment('SUPABASE_URL').isNotEmpty &&
-        const String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY').isNotEmpty;
-
     return MaterialApp(
       title: 'Viaje en Común',
       debugShowCheckedModeBanner: false,
@@ -27,17 +23,17 @@ class ViajeEnComunApp extends StatelessWidget {
           border: OutlineInputBorder(),
         ),
       ),
-      home: configured && initializationError == null
+      home: initializationError == null
           ? const AuthGate()
-          : _ConfigurationPage(error: initializationError),
+          : _ConfigurationPage(error: initializationError!),
     );
   }
 }
 
 class _ConfigurationPage extends StatelessWidget {
-  const _ConfigurationPage({this.error});
+  const _ConfigurationPage({required this.error});
 
-  final String? error;
+  final String error;
 
   @override
   Widget build(BuildContext context) {
@@ -54,17 +50,12 @@ class _ConfigurationPage extends StatelessWidget {
                 const Icon(Icons.cloud_off_outlined, size: 48),
                 const SizedBox(height: 16),
                 Text(
-                  error == null
-                      ? 'Falta configurar Supabase'
-                      : 'No se pudo inicializar Supabase',
+                  'No se pudo inicializar Supabase',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  error ??
-                      'Ejecuta la aplicación con --dart-define=SUPABASE_URL=… '
-                          'y --dart-define=SUPABASE_PUBLISHABLE_KEY=… después de aplicar '
-                          'las migraciones. No uses claves de servicio en Flutter.',
+                  error,
                   textAlign: TextAlign.center,
                 ),
               ],
