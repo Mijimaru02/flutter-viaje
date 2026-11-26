@@ -18,12 +18,12 @@ La app usa `setState` y `Navigator` de Flutter; no incorpora un framework extern
 1. Crea un proyecto Supabase y habilita Auth con correo y contraseña. En proyectos con confirmación de correo, verifica cada cuenta antes de iniciar sesión.
    Configura la URL del sitio y las redirecciones permitidas de Auth: el origen web usado por la app y `com.example.viajeencomun://reset-callback` para Android/iOS. El enlace abre la pantalla de nueva contraseña. Si cambias el identificador de paquete, actualiza también este esquema en Android, iOS y Auth.
 2. Ejecuta el contenido de `supabase/migrations/20261126180800_initial_schema.sql` en el SQL Editor del proyecto. La migración crea las tablas, las restricciones, las funciones transaccionales, las políticas RLS y el bucket privado `trip-documents`.
-3. Para cargar datos de demostración, crea en Auth estas cuentas y completa sus perfiles:
+3. Para cargar datos de demostración, crea primero estas tres cuentas en **Authentication > Users > Add user**. Usa exactamente estos correos y establece una contraseña para cada cuenta:
    - `lucia@viaje.test` — propietaria
    - `ana@viaje.test` — editora
    - `marcos@viaje.test` — lector
    
-   Después ejecuta `supabase/seed.sql` en el SQL Editor. El seed crea un viaje compartido (incluye el ejemplo de balance), otro viaje privado y una actividad. Las contraseñas las establece cada usuario durante el registro y no se guardan en el repositorio.
+   Si Auth exige confirmar el correo, marca las cuentas como confirmadas al crearlas. La migración genera sus perfiles automáticamente. Después ejecuta `supabase/seed.sql` en el SQL Editor. El seed crea un viaje compartido (incluye el ejemplo de balance), otro viaje privado y una actividad. Estas cuentas son solo para pruebas; no guardes sus contraseñas en el repositorio.
 4. Copia la URL del proyecto y la clave publicable desde el Dashboard. No uses `service_role`, claves secretas ni contraseñas en Flutter.
 
 El esquema asocia pagador, creador y participantes a miembros del mismo viaje mediante claves foráneas compuestas. La aceptación de invitaciones y el guardado de gasto/repartos se ejecutan en funciones PostgreSQL; el token de invitación se almacena como hash. Las políticas RLS aplican roles y autoría también si se llama a la API sin pasar por Flutter. El bucket no es público y sus políticas limitan lectura, subida y borrado por viaje/rol.
